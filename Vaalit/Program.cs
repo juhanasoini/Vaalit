@@ -1,16 +1,15 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Vaalit
 {
     class Program
     {
-        static void tallennaEhdokkaat( List<Ehdokas> ehdokkaat )
+        static void tallennaEhdokkaat(List<Ehdokas> ehdokkaat)
         {
             JsonSerializerSettings loJsonSerializerSettings = new JsonSerializerSettings()
             {
@@ -73,7 +72,7 @@ namespace Vaalit
             ehdokkaat.Sort(comparer);
 
             //Napataan läpi päässeet ehdokkaat
-            List<Ehdokas> valtuusto = ehdokkaat.GetRange( 0, 51 );
+            List<Ehdokas> valtuusto = ehdokkaat.GetRange(0, 51);
 
             //Järjestää ehdokkaat puolueittain + äänimäärän ja nimen mukaan
             valtuusto.Sort();
@@ -81,12 +80,11 @@ namespace Vaalit
             //Tulostetaan valtuusto
             for (int i = 0; i < valtuusto.Count; i++)
             {
-               // Console.WriteLine( "{0}: {1}", (i+1), valtuusto[i].ToString() );
+                Console.WriteLine( "{0}: {1}", (i+1), valtuusto[i].ToString() );
             }
 
-
             //Tallennetaan ehdokkaat JSON tiedostoon
-            tallennaEhdokkaat( ehdokkaat );
+            tallennaEhdokkaat(ehdokkaat);
 
             //List<Ehdokas> SortedList = ehdokkaat.OrderByDescending(o => o.Aanimaara).ToList();
             //foreach (var item in SortedList)
@@ -94,9 +92,6 @@ namespace Vaalit
             //    Console.WriteLine(item.fullName());
             //}
 
-            string merkkijono = "jotain";
-
-            Console.WriteLine( ehdokkaat[0].Etunimi );
 
             Console.ReadLine();
         }
