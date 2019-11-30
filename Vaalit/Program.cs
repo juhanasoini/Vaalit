@@ -69,7 +69,6 @@ namespace Vaalit
             //Generoidaan ehdokkaille vertailuluvut
             foreach (KeyValuePair<string, Puolue> item in puolueet.OrderByDescending(x => x.Value.TotalVouteCount))
             {
-                Console.WriteLine( item.Value.ToString() );
                 item.Value.jaaVertailuluvut();
             }
 

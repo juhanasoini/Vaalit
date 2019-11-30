@@ -80,21 +80,24 @@ namespace Vaalit
             MySqlCommand cmd = conn.Query(query);
             var reader = cmd.ExecuteReader();
 
+            query = "";
+
             if (reader.HasRows)
             {
-                //query = "UPDATE c_ehdokkaat SET etunimi='"+Etunimi+"', sukunimi='"+Sukunimi+"', puolue='"+Puolue+"', aanimaara='"+Aanimaara+"', vertailuluku="+VertailuLuku+ " WHERE slug='" + slug + "'";
-                query = "UPDATE c_ehdokkaat SET vertailuluku=" + VertailuLuku + " WHERE slug='" + slug + "'";
-
                 if (VertailuLuku != 0)
                 {
-                    cmd = conn.Query(query);
-                    cmd.ExecuteReader();
+                    //query = "UPDATE c_ehdokkaat SET etunimi='"+Etunimi+"', sukunimi='"+Sukunimi+"', puolue='"+Puolue+"', aanimaara='"+Aanimaara+"', vertailuluku="+VertailuLuku+ " WHERE slug='" + slug + "'";
+                    query = "UPDATE c_ehdokkaat SET vertailuluku=" + VertailuLuku + " WHERE slug='" + slug + "'";
                 }
             }
             else
             {
                 query = "INSERT INTO c_ehdokkaat ( etunimi, sukunimi, puolue, aanimaara, slug ) VALUES( '" + Etunimi + "', '" + Sukunimi + "', '" + Puolue + "', " + Aanimaara + ", '" + slug + "' )";
                 Console.WriteLine(query);
+            }
+
+            if(query != "")
+            {
                 cmd = conn.Query(query);
                 cmd.ExecuteReader();
             }
