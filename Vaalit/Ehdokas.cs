@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Vaalit
 {
@@ -67,6 +69,47 @@ namespace Vaalit
             if (result == 0)
                 result = fullName().CompareTo(other.fullName());
             return result;
+        }
+
+        public bool Upsert(MysqlConn conn)
+        {
+            string slug = Slugify(this.ToString());
+
+            string query = "SELECT * FROM c_ehdokkaat WHERE slug='" + slug + "'";
+
+            MySqlCommand cmd = conn.Query(query);
+            var reader = cmd.ExecuteReader();
+
+            if (reader.HasRows)
+            {
+                //query = "UPDATE c_ehdokkaat SET etunimi='"+Etunimi+"', sukunimi='"+Sukunimi+"', puolue='"+Puolue+"', aanimaara='"+Aanimaara+"', vertailuluku="+VertailuLuku+ " WHERE slug='" + slug + "'";
+                query = "UPDATE c_ehdokkaat SET vertailuluku=" + VertailuLuku + " WHERE slug='" + slug + "'";
+
+                if (VertailuLuku != 0)
+                {
+                    cmd = conn.Query(query);
+                    cmd.ExecuteReader();
+                }
+            }
+            else
+            {
+                query = "INSERT INTO c_ehdokkaat ( etunimi, sukunimi, puolue, aanimaara, slug ) VALUES( '" + Etunimi + "', '" + Sukunimi + "', '" + Puolue + "', " + Aanimaara + ", '" + slug + "' )";
+                Console.WriteLine(query);
+                cmd = conn.Query(query);
+                cmd.ExecuteReader();
+            }
+
+            return true;
+        }
+
+        public static string Slugify(string phrase)
+        {
+            phrase = phrase.ToLower();
+            string str = Regex.Replace(phrase, @"[^a-z0-9\s-]", "");      
+            str = Regex.Replace(str, @"\s+", " ").Trim();
+            str = Regex.Replace(str, @"\s", "-"); 
+
+            return str;
         }
     }
     /// <summary>

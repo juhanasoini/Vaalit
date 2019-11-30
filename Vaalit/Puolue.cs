@@ -15,6 +15,11 @@ namespace Vaalit
             TotalVouteCount = votes;
         }
 
+        public override string ToString()
+        {
+            return PartyName + " " + TotalVouteCount;
+        }
+
         public int CompareTo(Puolue other)
         {
             if (other == null) return 1;

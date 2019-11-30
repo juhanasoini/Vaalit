@@ -21,6 +21,8 @@ namespace Vaalit
 
         static void Main(string[] args)
         {
+            MysqlConn mysql = new MysqlConn();
+            //mysql.CreateTable();
             //Luodaan tyhjä lista ehdokkaista
             List<Ehdokas> ehdokkaat = new List<Ehdokas>();
             //Ladataan tiedosto jossa ehdokkaat
@@ -31,6 +33,8 @@ namespace Vaalit
             // erotimerkki jolla splitataan rivi
             string sep = "\t";
 
+            Ehdokas tempEhd;
+
             //Käydään tiedosto läpi rivi kerrallaan
             while (sr.Peek() >= 0)
             {
@@ -40,13 +44,12 @@ namespace Vaalit
                 str = sr.ReadLine();
                 strArr = str.Split(sep.ToCharArray());
 
-                try
+                if( puolueet.ContainsKey(strArr[2]) == false )
                 {
-                    // luodaan puolue ja lisätään se puoluelistaan jos ei sitä jo listalta löydy
+                    //Luodaan puolue ja lisätään se puoluelistaan
                     Puolue puolue = new Puolue(strArr[2]);
                     puolueet.Add(strArr[2], puolue);
                 }
-                catch (Exception) { }
 
                 //Luodaan ehdokas
                 Ehdokas ehdokas = new Ehdokas(strArr[0], strArr[1], strArr[2], int.Parse(strArr[3]));
@@ -58,12 +61,15 @@ namespace Vaalit
 
                 //Lisätään ehdokas paikalliseen ehdokaslistaan
                 ehdokkaat.Add(ehdokas);
+                tempEhd = ehdokas;
+                //ehdokas.Upsert(mysql);
             }
             sr.Close();
 
             //Generoidaan ehdokkaille vertailuluvut
             foreach (KeyValuePair<string, Puolue> item in puolueet.OrderByDescending(x => x.Value.TotalVouteCount))
             {
+                Console.WriteLine( item.Value.ToString() );
                 item.Value.jaaVertailuluvut();
             }
 
@@ -80,18 +86,12 @@ namespace Vaalit
             //Tulostetaan valtuusto
             for (int i = 0; i < valtuusto.Count; i++)
             {
-                Console.WriteLine( "{0}: {1}", (i+1), valtuusto[i].ToString() );
+                //valtuusto[i].Upsert(mysql);
+                Console.WriteLine("{0}: {1}", (i + 1), valtuusto[i].ToString());
             }
 
-            //Tallennetaan ehdokkaat JSON tiedostoon
-            tallennaEhdokkaat(ehdokkaat);
-
-            //List<Ehdokas> SortedList = ehdokkaat.OrderByDescending(o => o.Aanimaara).ToList();
-            //foreach (var item in SortedList)
-            //{
-            //    Console.WriteLine(item.fullName());
-            //}
-
+            //Tallennetaan valtuusto JSON tiedostoon
+            tallennaEhdokkaat(valtuusto);
 
             Console.ReadLine();
         }
