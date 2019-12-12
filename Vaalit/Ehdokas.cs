@@ -71,6 +71,8 @@ namespace Vaalit
             return result;
         }
 
+        //Lisää ehdokkaan tietokantaan
+        //Päivittää vertailuluvun jos ehdokas on jo luotu
         public bool Upsert(MysqlConn conn)
         {
             string slug = Slugify(this.ToString());

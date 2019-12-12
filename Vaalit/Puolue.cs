@@ -31,6 +31,7 @@ namespace Vaalit
             return 0;
         }
 
+        //Järjestää ehdokaslistan äänimäärän mukaan laskevasti
         public List<Ehdokas> orderByVoteCount()
         {
             var comparer = new SortVoteCountDescendingHelper();
@@ -40,6 +41,7 @@ namespace Vaalit
             return temp;
         }
 
+        //Jakaa vertailuluvut puolueen äänimäärän mukaan
         public List<Ehdokas> jaaVertailuluvut()
         {
             var temp = orderByVoteCount();

@@ -12,6 +12,7 @@ namespace Vaalit
             conn = new MySqlConnection("server=jj820qt5lpu6krut.cbetxkdyhwsb.us-east-1.rds.amazonaws.com;user=qg988zods0upey3t;password=qse6pw2oqoigf76m;database=jz2karrwun9i9hek");
         }
 
+        //Avaa yhteyden tietokantaan, sulkee tarvittaessa
         public void Connect()
         {
             if (conn.State.ToString() == "Open")
@@ -20,11 +21,14 @@ namespace Vaalit
             conn.Open();
 
         }
+
+        //Sulkee yhteyden tietokantaan
         public void Close()
         {
             conn.Close();
         }
 
+        //Luo tietokantataulun jos sitä ei jo tietokannasta löydy
         public void CreateTable()
         {
             try
@@ -51,6 +55,7 @@ namespace Vaalit
 
         }
 
+        //Suorittaa kyselyn
         public MySqlCommand Query(string query)
         {
             try
